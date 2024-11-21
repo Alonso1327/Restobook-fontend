@@ -12,6 +12,7 @@ import RestaurantDashboard from "./pages/RestaurantDashboard"
 import RestaurantInfo from "./pages/RestaurantInfo"
 import { setNavigate } from './utils/customFetch';
 import RestauranteMenu from "./pages/RestauranteMenu"
+import RestaurantTables from "./pages/RestaurantTables"
 
 // Componente de ruta protegida modificado
 const ProtectedRoute = ({ children, allowedUserType }) => {
@@ -27,7 +28,6 @@ const ProtectedRoute = ({ children, allowedUserType }) => {
       if(!auth.restaurantId){
         navigate('/register-restaurant', {replace: true});
       }
-      console.log('auth', auth);
     }
   }, [auth, navigate, allowedUserType]);
 
@@ -80,7 +80,7 @@ const AppContent = () => {
         <Route path="menu" element={<RestauranteMenu/>}/>
         <Route path="comentarios" element={<h1>Comentarios</h1>}/>
         <Route path="calificacion" element={<h1>Calificación</h1>}/>
-        <Route path="mesas" element={<h1>Mesas</h1>}/>
+        <Route path="mesas" element={<RestaurantTables/>}/>
         <Route path="reservations" element={<h1>Reservaciones</h1>}/>
       </Route>
     </Routes>
