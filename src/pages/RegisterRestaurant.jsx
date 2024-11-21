@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import logo from "../assets/logo.png";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { API_ENDPOINTS } from '../utils/apiConfig'; // Import the API endpoints
 
 
 
@@ -64,7 +65,7 @@ export default function RegisterRestaurant() {
         setErrorMessage('');
 
         try {
-            const response = await fetch('http://localhost//Restobook-API/restaurants/register', {
+            const response = await fetch(API_ENDPOINTS.restaurantsRegister, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

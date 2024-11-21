@@ -1,7 +1,7 @@
 import { Button, Image } from "@nextui-org/react";
 import { NavLink, useParams } from "react-router-dom";
 import logo from '../assets/logo.png'
-import { Book, Calendar, LogOut, MessageSquare, Star, User, Utensils } from "lucide-react";
+import { Book, Calendar, LogOut, MessageSquare, Star, Table, Table2, User, Utensils } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 
 
@@ -14,6 +14,7 @@ function NavRestaurant() {
         { to: `/restaurant/${restaurantId}/dashboard/menu`, icon: Book, text: "Menu" },
         { to: `/restaurant/${restaurantId}/dashboard/comentarios`, icon: MessageSquare, text: "Comentarios" },
         { to: `/restaurant/${restaurantId}/dashboard/calificacion`, icon: Star, text: "Calificación" },
+        { to: `/restaurant/${restaurantId}/dashboard/Mesas`, icon: Table, text:"Mesas"},
         { to: `/restaurant/${restaurantId}/dashboard/reservations`, icon: Calendar, text: "Reservaciones" },
     ];
 

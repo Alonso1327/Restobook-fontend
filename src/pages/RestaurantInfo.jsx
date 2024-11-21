@@ -4,6 +4,7 @@ import { Edit, Save } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { customFetch } from '../utils/customFetch';
+import { API_ENDPOINTS } from '../utils/apiConfig';
 
 function RestaurantInfo() {
     const [editableFields, setEditableFields] = useState({});
@@ -28,7 +29,7 @@ function RestaurantInfo() {
 
     const handleGetInfo = async () => {
         try {
-            const response = await customFetch(`http://localhost/Restobook-API/restaurant/${restaurantId}`, {
+            const response = await customFetch(API_ENDPOINTS.restaurant(restaurantId), {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -91,7 +92,6 @@ function RestaurantInfo() {
                     ) : (
                         <form onSubmit={(e) => {
                             e.preventDefault();
-                            console.log(restaurantInfo);
                         }} className="grid md:grid-cols-2 sm:grid-cols-1 md:grid-rows-2 gap-4">
                             <div className="flex flex-col gap-10">
                                 {renderInputField("name", "Nombre del Restaurante", "Nombre del Restaurante")}
