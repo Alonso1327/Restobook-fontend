@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
+import {API_ENDPOINTS} from '../utils/apiConfig';
 
 const AuthContext = createContext(null);
 
@@ -33,7 +34,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch('http://localhost//Restobook-API/login', {
+      const response = await fetch(API_ENDPOINTS.login, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
