@@ -1,6 +1,6 @@
-import { Button, Card, CardBody, CardHeader, Input, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from "@nextui-org/react";
-import { DeleteIcon, EditIcon, HandPlatter } from "lucide-react";
-import { useCallback, useEffect, useState} from "react";
+import { Button, Card, CardBody, CardHeader, Input, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from "@nextui-org/react";
+import { DeleteIcon, EditIcon, HandPlatter, Tally1 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState} from "react";
 import { useParams } from "react-router-dom";
 import { createTable, deleteTable, getTablesByRestaurant } from "../utils/apiConfig";
 
@@ -19,6 +19,7 @@ function RestaurantTables() {
 
     // States
     const [mesas, setMesas] = useState([]);
+    const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -30,6 +31,16 @@ function RestaurantTables() {
 
 
     const {restaurantId} = useParams();
+    const rowsPerPage = 4;
+
+    const pages = Math.ceil(mesas.length / rowsPerPage);
+
+    const items = useMemo(()=>{
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        return mesas.slice(start, end);
+    }, [page, mesas])
 
     useEffect(() => {
         const fetchTables = async () => {
@@ -53,6 +64,9 @@ function RestaurantTables() {
         try {
             const newTable = { table_number: tableNumber, capacity:parseInt(capasity, 10), description: description};
             const createdTable = await createTable(restaurantId, newTable);
+            console.log('New Table Data without ID: ', newTable ,'Response: ', createdTable);
+            newTable['id'] = createdTable['table_id'];
+            console.log('New Table Data with ID: ', newTable, 'Response: ', createdTable);
             setMesas([...mesas, newTable]);
             console.log("Mesas created", createdTable, mesas);
             setTableNumber('')
@@ -67,11 +81,17 @@ function RestaurantTables() {
     const handleDeleteTable = async (tableId) => {
         try{
             await deleteTable(restaurantId,tableId);
-            setMesas(mesas.filter(m => m.id !== tableId));
+            setMesas(prevMesas => {
+                const updatedTable = prevMesas.filter(m=> m.id !== tableId);
+                console.log('Updated mesas: ', updatedTable);
+                return updatedTable;
+            });
         }catch(e){
             console.log('Delete table failed', e);
         }
     }
+
+    // const handleEdit
 
     const renderCell = useCallback((mesa, columnKey) => {
         const cellValue = mesa[columnKey]
@@ -128,14 +148,31 @@ function RestaurantTables() {
                     <p className="text-sm text-default-500">Modifica la información de tu restaurante aquí</p>
                 </CardHeader>
                 <CardBody>
-                    <Table>
+                    <Table
+                        bottomContent={
+                            <div className="flex w-full justify-center">
+                              <Pagination
+                                isCompact
+                                showControls
+                                showShadow
+                                color="secondary"
+                                page={page}
+                                total={pages}
+                                onChange={(page) => setPage(page)}
+                              />
+                            </div>
+                          }
+                          classNames={{
+                            wrapper: "min-h-[222px]",
+                          }}
+                    >
                         <TableHeader columns={colums}>
                             {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                         </TableHeader>
-                        <TableBody items={mesas} emptyContent={<MesaNoFound />}>
+                        <TableBody items={items} emptyContent={<MesaNoFound />}>
                             {
                                 (item) => (
-                                    <TableRow key={ item.id != null ? item.id : crypto.randomUUID()}>
+                                    <TableRow key={item.id}>
                                         {
                                             (columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>
 
